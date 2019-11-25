@@ -47,17 +47,44 @@ namespace Opdracht1
                 Console.WriteLine();
             }
         }
+
+        int InvertNumber(int number, int max)
+        { // think of this as reversing the x axis of a grid, if input is 4 and 4 it's result should be 0, and 0 and 4 and it's result should be 4
+            return System.Math.Abs(number - max);
+        }
+
+        void PrintMatrixWithCross(int[,] matrix)
+        {
+            for (int r = 0; r < matrix.GetLength(0); r++)
+            {
+                for (int k = 0; k < matrix.GetLength(1); k++)
+                {
+                    Console.ResetColor();
+
+                    if (r == k)
+                        Console.ForegroundColor = ConsoleColor.Red;
+
+                    if (InvertNumber(k, matrix.GetLength(1) - 1) == r)
+                        Console.BackgroundColor = ConsoleColor.Yellow;
+
+                    Console.Write($"{matrix[r, k],3} ");
+                }
+
+                Console.WriteLine();
+            }
+        }
+
         void Start()
         {
-            int[,] matrix1 = new int[5, 5];
-            int[,] matrix2 = new int[5, 5];
+            int[,] matrix1 = new int[25, 5];
+            int[,] matrix2 = new int[25, 25];
 
             InitMatrix2D(ref matrix1);
             InitMatrixLinear(ref matrix2);
 
             PrintMatrix(matrix1);
             Console.WriteLine();
-            PrintMatrix(matrix2);
+            PrintMatrixWithCross(matrix2);
 
             Console.ReadKey();
         }
