@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
-namespace Opdracht3
+namespace Opdracht4
 {
     class Program
     {
@@ -119,15 +120,85 @@ namespace Opdracht3
             return drierij;
         }
 
+        void SchrijfSpeelveld(RegularCandies[,] speelveld, string bestandsnaam)
+        {
+            StreamWriter writer = new StreamWriter(bestandsnaam);
+
+            writer.WriteLine($"{speelveld.GetLength(0)} {speelveld.GetLength(1)}");
+
+            for (int y = 0; y < speelveld.GetLength(1); y++)
+            {
+                for (int x = 0; x < speelveld.GetLength(0); x++)
+                {
+                    writer.Write($"{(int)speelveld[x, y]} ");
+                }
+                writer.WriteLine();
+            }
+
+            writer.Close();
+        }
+
+        RegularCandies[,] LeesSpeelveld(ref StreamReader reader)
+        {
+            string gelezenregel;
+            int xmax, ymax;
+
+            gelezenregel = reader.ReadLine();
+
+            string[] xyparams = gelezenregel.Split(' ');
+            xmax = int.Parse(xyparams[0]);
+            ymax = int.Parse(xyparams[1]);
+
+            RegularCandies[,] speelveld = new RegularCandies[xmax, ymax];
+
+            for (int y = 0; y < ymax; y++)
+            {
+                gelezenregel = reader.ReadLine();
+                string[] nummers = gelezenregel.Split(' ');
+                for (int x = 0; x < xmax; x++)
+                {
+                    speelveld[x, y] = (RegularCandies)int.Parse(nummers[x]);
+                }
+            }
+
+            reader.Close();
+            return speelveld;
+        }
 
         void Start()
         {
-            RegularCandies[,] speelveld = new RegularCandies[5, 5];
+            RegularCandies[,] speelveld = null;
+            bool error = false;
 
-            InitCandies(ref speelveld);
+            if (File.Exists("speelveld.txt"))
+            {
+                StreamReader reader = new StreamReader("speelveld.txt");
+
+                try
+                {
+                    speelveld = LeesSpeelveld(ref reader);
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine($"Something went wrong: {e.Message}");
+                    error = true;
+                }
+                finally
+                {
+                    reader.Close();
+                }
+            }
+            
+            if (!File.Exists("speelveld.txt") || error) //1 "unneeded if statement". This is the fallback if the catch is run.
+            {
+                speelveld = new RegularCandies[20, 20];
+                InitCandies(ref speelveld);
+                SchrijfSpeelveld(speelveld, "speelveld.txt");
+            }
 
             PrintCandies(speelveld);
-            Console.WriteLine($"Horizontal: {ScoreRijAanwezig(speelveld)}\nVertical: {ScoreKolomAanwezig(speelveld)}"); 
+            Console.WriteLine($"Horizontal: {ScoreRijAanwezig(speelveld)}\nVertical: {ScoreKolomAanwezig(speelveld)}");
+            
 
             Console.ReadKey();
         }
