@@ -19,7 +19,7 @@ namespace Opdracht3
             while (!reader.EndOfStream)
             {
                 lastreadline = reader.ReadLine();
-                string[] translation = lastreadline.Split(';');
+                string[] translation = lastreadline.Split(new char[] { ';' }, 2);
                 woordenboek.Add(translation[0], translation[1]);
             }
 

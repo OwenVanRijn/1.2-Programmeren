@@ -27,6 +27,7 @@ namespace Opdracht4
         {
             LetterKleuren[] letters = new LetterKleuren[woord.Length];
             laatstIngevoerdeWoord = woord;
+            List<char> geheimarray = geheimwoord.ToList();
 
             for (int i = 0; i < letters.Length; i++)
                 letters[i] = LetterKleuren.NONE;
@@ -34,14 +35,18 @@ namespace Opdracht4
             for (int guess = 0; guess < woord.Length; guess++)
             {
                 if (geheimwoord[guess] == woord[guess])
-                    letters[guess] = LetterKleuren.GREEN;
-
-                else for (int posSecret = 0; posSecret < geheimwoord.Length; posSecret++)
                 {
-                    if (geheimwoord[posSecret] == woord[guess])
-                    {
-                        letters[guess] = LetterKleuren.YELLOW;
-                    }
+                    letters[guess] = LetterKleuren.GREEN;
+                    geheimarray.Remove(geheimwoord[guess]);
+                }
+            }
+
+            for (int guess = 0; guess < woord.Length; guess++)
+            {
+                if (geheimarray.Contains(woord[guess]) && letters[guess] != LetterKleuren.GREEN)
+                {
+                    letters[guess] = LetterKleuren.YELLOW;
+                    geheimarray.Remove(woord[guess]);
                 }
             }
 
