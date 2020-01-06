@@ -12,6 +12,7 @@ namespace Opdracht4
         YELLOW,
         GREEN
     }
+
     class LingoGame
     {
         private string laatstIngevoerdeWoord;
